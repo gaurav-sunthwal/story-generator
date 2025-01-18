@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { Card } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function CreateStory() {
   const cardData = [
@@ -12,26 +13,26 @@ export default function CreateStory() {
       name: "Image to Story",
       icon: "🖼️",
       description: "Transform your images into engaging stories.",
-      gradient: "from-purple-500 to-pink-500",
+      url: "/ImgtoStory",
     },
     {
-      name: "Image to Post",
-      icon: "📤",
-      description: "Create stunning posts from your images.",
-      gradient: "from-blue-500 to-teal-500",
+      name: "Image to Poverty",
+      icon: "🎧ྀི",
+      description: "Create stunning poverty from your images.",
+      url: "/ImgtoPory",
     },
     {
       name: "Image to Motivational Quote",
       icon: "💬",
       description: "Generate inspiring quotes from images.",
-      gradient: "from-orange-500 to-red-500",
+      url: "/ImgtoMotivation"
     },
   ];
 
   return (
-    <div className="w-full min-h-screen">
-      <BackgroundBeamsWithCollision>
-        <div className="relative z-10 container mx-auto px-4 py-16">
+    <div className="w-full h-full">
+      <BackgroundBeamsWithCollision className=" w-full h-full">
+        <div className="relative z-10 container mx-auto px-4 py-16 w-full h-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,15 +61,21 @@ export default function CreateStory() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Card className="group relative overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 h-full">
-                  <div className="absolute inset-0 bg-gradient-to-r opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
-                  <div className="relative p-6 flex flex-col justify-between">
-                    <div className="mb-4 text-4xl">{card.icon}</div>
-                    <h2 className="text-2xl font-semibold mb-2">{card.name}</h2>
-                    <p className="text-muted-foreground">{card.description}</p>
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                </Card>
+                <Link href={`/create/${card.url}`}>
+                  <Card className="group relative overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 h-full">
+                    <div className="absolute inset-0 bg-gradient-to-r opacity-10 group-hover:opacity-20 transition-opacity duration-300" />
+                    <div className="relative p-6 flex flex-col justify-between">
+                      <div className="mb-4 text-4xl">{card.icon}</div>
+                      <h2 className="text-2xl font-semibold mb-2">
+                        {card.name}
+                      </h2>
+                      <p className="text-muted-foreground">
+                        {card.description}
+                      </p>
+                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                  </Card>
+                </Link>
               </motion.div>
             ))}
           </div>

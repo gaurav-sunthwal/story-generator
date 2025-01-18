@@ -84,9 +84,11 @@ export default function Home() {
             animate={{ scale: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
+            <Link href={"/create"}>
             <Button size="lg" className="text-lg px-8 py-4">
               Start Creating
             </Button>
+            </Link>
           </motion.div>
         </main>
 
