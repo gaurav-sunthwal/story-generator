@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import HTMLFlipBook from "react-pageflip";
+import FlotingNav from "@/app/AppComponents/FlotingNav";
+import { VStack } from "@chakra-ui/react";
+import { cn } from "@/lib/utils";
 
 const data = {
   chapters: [
@@ -109,25 +112,25 @@ const data = {
 
 export default function AnimatedStoryBook() {
   const [currentPage, setCurrentPage] = useState(0);
+  const [bgColor, setBgColor] = useState("");
   const flipBookRef = useRef(null);
 
-  const handleNextPage = () => {
-    flipBookRef.current?.pageFlip().flipNext();
-    setCurrentPage((prev) => Math.min(prev + 1, data.chapters.length));
-  };
-
-  const handlePrevPage = () => {
-    flipBookRef.current?.pageFlip().flipPrev();
-    setCurrentPage((prev) => Math.max(prev - 1, 0));
-  };
+  useEffect(() => {
+    const res = localStorage.getItem("imgtoStory");
+    if (res) {
+      const result = JSON.parse(res);
+      console.log(result.color);
+      setBgColor(result.color);
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center p-4">
+    <div className={cn("min-h-screen bg-gradient-to-r", bgColor)}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className=" p-8 max-w-6xl w-full"
+        className=" p-8 w-full"
       >
         {/* <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">Marmalade's Culinary Adventures</h1> */}
         <div className="relative">
@@ -143,15 +146,15 @@ export default function AnimatedStoryBook() {
               <HTMLFlipBook
                 ref={flipBookRef}
                 width={400}
-                height={500}
-                size="stretch"
+                height={550}
                 minWidth={315}
                 maxWidth={1000}
                 minHeight={400}
                 maxHeight={1233}
+                size="stretch"
                 maxShadowOpacity={0.5}
                 showCover={true}
-                mobileScrollSupport={true}
+                // mobileScrollSupport={true}
                 className="book-container shadow-2xl rounded-lg  overflow-scroll"
               >
                 {/* Cover Page */}
@@ -167,7 +170,6 @@ export default function AnimatedStoryBook() {
                       objectFit="cover"
                       className="rounded-lg"
                     />
-                    
                   </div>
                 ))}
 
@@ -200,25 +202,10 @@ export default function AnimatedStoryBook() {
               </HTMLFlipBook>
             </motion.div>
           </AnimatePresence>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handlePrevPage}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300"
-          >
-            <FiArrowLeft size={24} className="text-gray-800" />
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={handleNextPage}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300"
-          >
-            <FiArrowRight size={24} className="text-gray-800" />
-          </motion.button>
         </div>
+        <VStack>
+          <FlotingNav />
+        </VStack>
       </motion.div>
     </div>
   );

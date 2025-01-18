@@ -1,32 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ColorModeButton } from "@/components/ui/color-mode";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
-  const [backgroundImage, setBackgroundImage] = useState(
-    "/img/home-shapes.svg"
-  );
+ const {   isLoaded , isSignedIn} = useUser()
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setBackgroundImage("/img/home-shapes-mobile.svg");
-      } else if (window.innerWidth < 1024) {
-        setBackgroundImage("/img/home-shapes-tablet.svg");
-      } else {
-        setBackgroundImage("/img/home-shapes.svg");
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -53,7 +36,7 @@ export default function Home() {
           </h1>
           <div className="flex gap-4">
             <Button asChild variant="outline">
-              <Link href="/dashboard">Start for Free</Link>
+              <Link href={isLoaded && isSignedIn ? "/dashboard" : "/create"}>{isLoaded && isSignedIn ? "Dashboard" : "Start for Free"}</Link>
             </Button>
             <ColorModeButton />
           </div>

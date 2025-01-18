@@ -23,6 +23,7 @@ export default function Page() {
   const [description, setDescription] = useState(""); // Added description state
   const [selectedMood, setSelectedMood] = useState<string | null>(null); // Added selectedMood state
   const [storyLength, setStoryLength] = useState<string | null>(null); // Added storyLength state
+  const [color ,  setColor] = useState<string | null>(null); // Added color
   const router = useRouter();
   const params = useParams();
   const MOOD_OPTIONS = [
@@ -98,9 +99,11 @@ export default function Page() {
         description,
         selectedMood,
         storyLength,
+        color
       };
       console.log("Generate", storyData);
-      router.push(`/create/${params.createId}/${params.createId === "ImgtoStory" ? "story" : "poetry"}`);
+      router.push(`/create/${params.createId}/${params.createId === "ImgtoStory" ? "story" : params.createId === "ImgtoPoetry" ? "poetry" : "motivation"}`);
+      localStorage.setItem("imgtoStory", JSON.stringify(storyData));
     }
   };
 
@@ -242,7 +245,10 @@ export default function Page() {
                                 ? "ring-2 ring-primary"
                                 : "hover:ring-1 hover:ring-primary/50"
                             )}
-                            onClick={() => setSelectedMood(mood.id)}
+                            onClick={() => {
+                              setSelectedMood(mood.id);
+                              setColor(mood.color);
+                            }}
                           >
                             <div
                               className={cn(
