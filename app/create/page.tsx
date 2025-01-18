@@ -16,10 +16,10 @@ export default function CreateStory() {
       url: "/ImgtoStory",
     },
     {
-      name: "Image to Poverty",
+      name: "Image to poetry",
       icon: "🎧ྀི",
-      description: "Create stunning poverty from your images.",
-      url: "/ImgtoPory",
+      description: "Create stunning poetry from your images.",
+      url: "/ImgtoPoetry",
     },
     {
       name: "Image to Motivational Quote",

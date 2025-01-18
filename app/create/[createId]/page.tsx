@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 export default function Page() {
   const [files, setFiles] = useState<File[]>([]); // Files state is used in handleFileUpload and removeFile functions
@@ -24,6 +24,7 @@ export default function Page() {
   const [selectedMood, setSelectedMood] = useState<string | null>(null); // Added selectedMood state
   const [storyLength, setStoryLength] = useState<string | null>(null); // Added storyLength state
   const router = useRouter();
+  const params = useParams();
   const MOOD_OPTIONS = [
     {
       id: "cyberpunk",
@@ -99,8 +100,7 @@ export default function Page() {
         storyLength,
       };
       console.log("Generate", storyData);
-      localStorage.setItem("storyData", JSON.stringify(storyData));
-      router.push("/dashboard");
+      router.push(`/create/${params.createId}/${params.createId === "ImgtoStory" ? "story" : "poetry"}`);
     }
   };
 
@@ -307,3 +307,6 @@ export default function Page() {
     </motion.div>
   );
 }
+
+
+
