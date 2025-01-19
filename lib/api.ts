@@ -263,6 +263,25 @@ class CaptionAPI {
     }
 }
 
+interface AllSaved {
+    poems: Poem[];
+    stories: Story[];
+}
+
+interface Poem {
+    content: string; // JSON string containing poem data
+    id: number;
+    user_id: string;
+}
+
+interface Story {
+    content: string; // JSON string containing an array of chapters
+    id: number;
+    image?: string; // Optional, as not all stories might have an image
+    title: string;
+    user_id: string;
+}
+
 class StoredAPI {
     private readonly baseUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
 
@@ -271,7 +290,7 @@ class StoredAPI {
     }
 
     async getAllSaved(user_id: string) {
-        return await axiosClient.get(`${this.baseUrl}/getAll/${user_id}`);
+        return (await axiosClient.get<AllSaved>(`${this.baseUrl}/getAll/${user_id}`)).data;
     }
 }
 
