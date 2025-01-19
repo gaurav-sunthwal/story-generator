@@ -9,19 +9,10 @@ import { motion, useScroll } from "framer-motion";
 import { ColorModeButton } from "@/components/ui/color-mode";
 // import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import {useGeneratedPoemStore} from "@/lib/shared";
 
-const poetry = `5 days a week, 7 hours a day. Once I am home from school,
-I do homework and study, while looking at the trees as if they were dancing calmly.
-I can smell my mom's amazing soup while doing homework.
-School is not just hard work, it is fun.
-It is fun because I get to do many activities. And we learn at the same time.
-I study so I can have a good future, a good job, and be a good student.
-Sometimes I think under the sun that sets on our final day,
-we are smiling knowing our hard work paid off for success in the future.
-Our future selves will be us for the rest of our lives.
-So make the best lives possible because it is the best choice.
-Was there anything I might have done for a better future?
-Possibly, but it is as bright as anything I would have ever imagined.`;
+
+
 
 const FloatingElement: React.FC<{ children: React.ReactNode }> = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -47,14 +38,14 @@ const FloatingElement: React.FC<{ children: React.ReactNode }> = ({ children }: 
 
 export default function Page() {
   const [fontSize, setFontSize] = useState(16);
-  const [isBookmarked, setIsBookmarked] = useState(false);
 //   const [focusMode, setFocusMode] = useState(false);
   const [focusedLine, setFocusedLine] = useState(0);
   const { toast } = useToast();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef });
 //   const readingProgress = useTransform(scrollYProgress, [0, 1], [0, 100]);
-
+  const poemStore = useGeneratedPoemStore();
+  const poetry = poemStore.poem;
   const wordCount = poetry.split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
   const poetryLines = poetry.split('\n');

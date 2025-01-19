@@ -37,6 +37,16 @@ interface GeneratedStoryStore {
     setChapters: (chapters: GeneratedChapter[]) => void;
 }
 
+interface GeneratedPoemStore {
+    poem: string;
+    setPoem: (poem: string) => void;
+}
+
+export const useGeneratedPoemStore = create<GeneratedPoemStore>((set) => ({
+    poem: "",
+    setPoem: (poem: string) => set({ poem })
+}))
+
 export const useGeneratedStoryStore = create<GeneratedStoryStore>((set) => ({
     cover_art: "",
     chapters: [],
