@@ -174,6 +174,27 @@ class PoemAPI {
         return response.data;
     }
 
+    async generateSettings(file_id: string, themes: string[]): Promise<{
+        data: {
+            settings: string[];
+        };
+    }> {
+        const payload = {file_id, themes};
+
+        const response = await axiosClient.post<{
+            data: {
+                settings: string[];
+            };
+        }>(
+            `${this.baseUrl}/img2poem/generateSettings`,
+            payload,
+            {
+                headers: {'Content-Type': 'application/json'},
+            }
+        );
+        return response.data;
+    }
+
     async generatePoem(
         image_uid: string,
         themes: string[],
