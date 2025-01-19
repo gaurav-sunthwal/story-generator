@@ -42,6 +42,16 @@ interface GeneratedPoemStore {
     setPoem: (poem: string) => void;
 }
 
+interface GeneratedCaptionStore {
+    captions: string[];
+    setCaptions: (captions: string[]) => void;
+}
+
+export const useGeneratedCaptionStore = create<GeneratedCaptionStore>((set) => ({
+    captions: [],
+    setCaptions: (captions: string[]) => set({ captions })
+}))
+
 export const useGeneratedPoemStore = create<GeneratedPoemStore>((set) => ({
     poem: "",
     setPoem: (poem: string) => set({ poem })
