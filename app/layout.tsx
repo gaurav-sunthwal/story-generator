@@ -28,13 +28,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        {/* <BackgroundBeams/> */}
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Provider>
-            <div>{children}</div>
-          </Provider>
+          {/* <BackgroundBeams className="-z-0"/> */}
+            <Provider>
+              <div>{children}</div>
+            </Provider>
         </body>
       </html>
     </ClerkProvider>

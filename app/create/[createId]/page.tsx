@@ -14,6 +14,8 @@ import { useRouter, useParams } from "next/navigation";
 import { StoryAPI } from "@/lib/api";
 import { useImageStore } from "@/lib/shared";
 import { Textarea } from "@/components/ui/textarea";
+import { HStack } from "@chakra-ui/react";
+import { ColorModeButton } from "@/components/ui/color-mode";
 
 interface MoodOption {
   id: string;
@@ -280,14 +282,17 @@ export default function Page() {
       transition={{ duration: 0.6 }}
     >
       <div className="container max-w-4xl mx-auto px-4 py-8 z-100">
-        <div className="mb-8">
-          <Link href="/create">
-            <Button variant="ghost" className="gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </Button>
-          </Link>
-        </div>
+        <HStack justifyContent={"space-between"} alignItems={"center"} mb={4}>
+          <div>
+            <Link href="/create">
+              <Button variant="ghost" className="gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+            </Link>
+          </div>
+          <ColorModeButton />
+        </HStack>
 
         <Card className="p-8 shadow-lg rounded-lg z-20">
           <motion.div
