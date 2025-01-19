@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter, useParams } from "next/navigation";
+// import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export default function Page() {
   const [files, setFiles] = useState<File[]>([]); // Files state is used in handleFileUpload and removeFile functions
@@ -21,9 +22,9 @@ export default function Page() {
   const [progress, setProgress] = React.useState(0);
   const [step, setStep] = useState(1); // Track step (1: Upload, 2: Genre Selection)
   const [description, setDescription] = useState(""); // Added description state
-  const [selectedMood, setSelectedMood] = useState<string | null>(null); // Added selectedMood state
+  const [selectedMood, setSelectedMood] = useState<string[] | null>(null); // Added selectedMood state
   const [storyLength, setStoryLength] = useState<string | null>(null); // Added storyLength state
-  const [color ,  setColor] = useState<string | null>(null); // Added color
+  const [color, setColor] = useState<string | null>(null); // Added color
   const router = useRouter();
   const params = useParams();
   const MOOD_OPTIONS = [
@@ -99,10 +100,18 @@ export default function Page() {
         description,
         selectedMood,
         storyLength,
-        color
+        color,
       };
       console.log("Generate", storyData);
-      router.push(`/create/${params.createId}/${params.createId === "ImgtoStory" ? "story" : params.createId === "ImgtoPoetry" ? "poetry" : "motivation"}`);
+      router.push(
+        `/create/${params.createId}/${
+          params.createId === "ImgtoStory"
+            ? "story"
+            : params.createId === "ImgtoPoetry"
+            ? "poetry"
+            : "motivation"
+        }`
+      );
       localStorage.setItem("imgtoStory", JSON.stringify(storyData));
     }
   };
@@ -169,10 +178,10 @@ export default function Page() {
             </p>
           </motion.div>
 
-          <div className="space-y-6">
-            {step === 2 && previews.length === 0 ? (
+          <div className="space-y-6 z-40">
+            {step === 1 && previews.length === 0 ? (
               <FileUpload onChange={handleFileUpload} />
-            ) : step === 2 && previews.length > 0 ? (
+            ) : step === 1 && previews.length > 0 ? (
               <motion.div
                 className="w-full h-full flex justify-center items-center"
                 initial="hidden"
@@ -208,7 +217,7 @@ export default function Page() {
                   </motion.div>
                 ))}
               </motion.div>
-            ) : step === 1 ? (
+            ) : step === 2 ? (
               <>
                 <motion.div
                   key="options"
@@ -233,32 +242,31 @@ export default function Page() {
                     <h3 className="text-lg font-semibold">Select a mood</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {MOOD_OPTIONS.map((mood) => (
-                        <motion.div
-                          key={mood.id}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                      <motion.div
+                        key={mood.id}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Card
+                        className={cn(
+                          "p-4 cursor-pointer transition-all hover:shadow-lg bg-gradient-to-r",
+                          mood.color,
+                          selectedMood?.includes(mood.id)
+                          ? "ring-2 ring-primary"
+                          : "hover:ring-1 hover:ring-primary/50"
+                        )}
+                        onClick={() => {
+                          setSelectedMood((prev) =>
+                          prev?.includes(mood.id)
+                            ? prev.filter((id) => id !== mood.id)
+                            : [...(prev || []), mood.id]
+                          );
+                          setColor(mood.color);
+                        }}
                         >
-                          <Card
-                            className={cn(
-                              "p-4 cursor-pointer transition-all hover:shadow-lg",
-                              selectedMood === mood.id
-                                ? "ring-2 ring-primary"
-                                : "hover:ring-1 hover:ring-primary/50"
-                            )}
-                            onClick={() => {
-                              setSelectedMood(mood.id);
-                              setColor(mood.color);
-                            }}
-                          >
-                            <div
-                              className={cn(
-                                "h-32 rounded-lg bg-gradient-to-r",
-                                mood.color
-                              )}
-                            />
-                            <h4 className="mt-4 font-semibold">{mood.title}</h4>
-                          </Card>
-                        </motion.div>
+                        <h4 className="font-semibold text-center">{mood.title}</h4>
+                        </Card>
+                      </motion.div>
                       ))}
                     </div>
                   </div>
@@ -313,6 +321,3 @@ export default function Page() {
     </motion.div>
   );
 }
-
-
-

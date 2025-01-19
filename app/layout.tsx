@@ -28,12 +28,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        {/* <BackgroundBeams/> */}
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Provider>
-            <BackgroundBeams className="z-0" />
-            <div className="!z-100">{children}</div>
+            <div>{children}</div>
           </Provider>
         </body>
       </html>

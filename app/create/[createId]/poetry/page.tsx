@@ -1,52 +1,85 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { BookOpen, Bookmark, Share2, ArrowLeft } from "lucide-react";
+import { BookOpen, Bookmark, Share2, ArrowLeft, Copy } from 'lucide-react';
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { ColorModeButton } from "@/components/ui/color-mode";
+// import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
-const poetry = `
-5 days a week, 7 hours a day.
-Once I am home from school,
-I do homework and study,
-while looking at the trees as if they were dancing calmly.
+const poetry = `5 days a week, 7 hours a day. Once I am home from school,
+I do homework and study, while looking at the trees as if they were dancing calmly.
 I can smell my mom's amazing soup while doing homework.
 School is not just hard work, it is fun.
-It is fun because I get to do many activities.
-And we learn at the same time.
-I study so I can have a good future,
-a good job, and be a good student.
-Sometimes I think
-ender the sun that sets on our final day,
-we are smiling knowing
-our hard work paid off for success in the future.
+It is fun because I get to do many activities. And we learn at the same time.
+I study so I can have a good future, a good job, and be a good student.
+Sometimes I think under the sun that sets on our final day,
+we are smiling knowing our hard work paid off for success in the future.
 Our future selves will be us for the rest of our lives.
-So make the best lives possible because
-it is the best choice.
+So make the best lives possible because it is the best choice.
 Was there anything I might have done for a better future?
-Possibly, but it is as bright
-as anything I would have ever imagined.
-`;
+Possibly, but it is as bright as anything I would have ever imagined.`;
+
+const FloatingElement: React.FC<{ children: React.ReactNode }> = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    className="absolute text-4xl text-primary/10 dark:text-primary/20 pointer-events-none"
+    animate={{
+      y: ["0%", "100%"],
+      opacity: [0.7, 0, 0.7],
+      scale: [1, 1.2, 1],
+    }}
+    transition={{
+      duration: Math.random() * 10 + 10,
+      repeat: Infinity,
+      repeatType: "reverse",
+    }}
+    style={{
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+    }}
+  >
+    {children}
+  </motion.div>
+);
 
 export default function Page() {
   const [fontSize, setFontSize] = useState(16);
   const [isBookmarked, setIsBookmarked] = useState(false);
+//   const [focusMode, setFocusMode] = useState(false);
+  const [focusedLine, setFocusedLine] = useState(0);
+  const { toast } = useToast();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+//   const readingProgress = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   const wordCount = poetry.split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
+  const poetryLines = poetry.split('\n');
 
   useEffect(() => {
-    const handleMouseMove = () => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight } = containerRef.current;
+        const lineHeight = scrollHeight / poetryLines.length;
+        const currentLine = Math.floor(scrollTop / lineHeight);
+        setFocusedLine(currentLine);
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+    }
+
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      if (container) {
+        (container as HTMLElement).removeEventListener('scroll', handleScroll);
+      }
     };
-  }, []);
+  }, [poetryLines.length]);
 
   const handleShare = async () => {
     try {
@@ -60,93 +93,132 @@ export default function Page() {
     }
   };
 
-  return (
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(poetry);
+    toast({
+      title: "Copied to clipboard",
+      description: "The poem has been copied to your clipboard.",
+    });
+  };
 
-      <div className="relative min-h-screen flex flex-col items-center p-4">
-        <nav className="w-full fixed top-0 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 shadow-lg backdrop-blur-sm z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center">
-                <Link href="/" className="flex items-center">
-                  <Button variant="ghost" size="icon" className="mr-2">
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                  <span className="text-lg font-medium">School Days</span>
-                </Link>
+  return (
+    <div className="relative min-h-screen flex flex-col items-center p-4 overflow-hidden">
+      {/* Floating background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <FloatingElement>📚</FloatingElement>
+        <FloatingElement>✏️</FloatingElement>
+        <FloatingElement>🍎</FloatingElement>
+        <FloatingElement>🎒</FloatingElement>
+        <FloatingElement>🖍️</FloatingElement>
+      </div>
+
+      <nav className="w-full fixed top-0 left-0 right-0 bg-white/95 dark:bg-zinc-900/95 shadow-lg backdrop-blur-sm z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center">
+                <Button variant="ghost" size="icon" className="mr-2">
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                <span className="text-lg font-medium">School Days</span>
+              </Link>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <BookOpen className="h-4 w-4" />
+                <span>{readingTime} min read</span>
               </div>
               
-              <div className="flex items-center gap-4">
-                <div className="hidden sm:flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  <BookOpen className="h-4 w-4" />
-                  <span>{readingTime} min read</span>
-                </div>
-                
-                <div className="hidden sm:block w-32">
-                  <Slider
-                    value={[fontSize]}
-                    min={12}
-                    max={24}
-                    step={1}
-                    onValueChange={(value) => setFontSize(value[0])}
-                    className="w-full"
-                  />
-                </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="text-sm text-zinc-600 dark:text-zinc-400">Font Size:</span>
+                <Slider
+                  value={[fontSize]}
+                  min={12}
+                  max={24}
+                  step={1}
+                  onValueChange={({ value }: { value: number[] }) => setFontSize(value[0])}
+                  className="w-32"
+                />
+                <span className="text-sm text-zinc-600 dark:text-zinc-400">{fontSize}px</span>
+              </div>
 
-                <div className="flex items-center gap-2">
-               <ColorModeButton/>
-                  
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsBookmarked(!isBookmarked)}
-                    className={isBookmarked ? "text-yellow-500" : "text-zinc-700 dark:text-zinc-300"}
-                  >
-                    <Bookmark className="h-5 w-5" />
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleShare}
-                    className="text-zinc-700 dark:text-zinc-300"
-                  >
-                    <Share2 className="h-5 w-5" />
-                  </Button>
-                </div>
+              <div className="flex items-center gap-2">
+                <ColorModeButton />
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsBookmarked(!isBookmarked)}
+                  className={isBookmarked ? "text-yellow-500" : "text-zinc-700 dark:text-zinc-300"}
+                >
+                  <Bookmark className="h-5 w-5" />
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleShare}
+                  className="text-zinc-700 dark:text-zinc-300"
+                >
+                  <Share2 className="h-5 w-5" />
+                </Button>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyToClipboard}
+                  className="text-zinc-700 dark:text-zinc-300"
+                >
+                  <Copy className="h-5 w-5" />
+                </Button>
+
+               
               </div>
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mt-20"
-        >
-          <BackgroundGradient className="rounded-[22px] max-w-2xl p-4 sm:p-10 bg-white dark:bg-zinc-900 mx-auto">
-            <div 
-              className={`prose dark:prose-invert max-w-none`}
-              style={{ 
-                fontSize: `${fontSize}px`,
-                lineHeight: 1.8,
-                whiteSpace: 'pre-wrap'
-              }}
-            >
-              {poetry.split('\n').map((line, index) => (
-                <motion.p
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="mb-4 text-neutral-600 dark:text-neutral-400"
-                >
-                  {line}
-                </motion.p>
-              ))}
-            </div>
-          </BackgroundGradient>
-        </motion.div>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mt-20 w-full max-w-2xl"
+      >
+        <BackgroundGradient className="rounded-[22px] p-4 sm:p-10 bg-white dark:bg-zinc-900 mx-auto">
+          <div 
+            ref={containerRef}
+            className={`prose dark:prose-invert max-w-none max-h-[70vh] overflow-y-auto`}
+            style={{ 
+              fontSize: `${fontSize}px`,
+              lineHeight: 1.8,
+            }}
+          >
+            {poetryLines.map((line, index) => (
+              <motion.p
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`mb-4 text-neutral-600 dark:text-neutral-400 ${
+                  index === focusedLine ? 'bg-primary/10 -mx-2 px-2 rounded' : ''
+                }`}
+              >
+                {line}
+              </motion.p>
+            ))}
+          </div>
+        </BackgroundGradient>
+      </motion.div>
+
+      <motion.div 
+        className="fixed bottom-0 left-0 right-0 h-1 bg-primary/50"
+        style={{ scaleX: scrollYProgress }}
+      />
+
+      
+    </div>
   );
 }
+
