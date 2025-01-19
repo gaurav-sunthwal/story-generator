@@ -229,7 +229,7 @@ export default function Page() {
   };
 
   const handleNext = () => {
-    if (step === 3) {
+    if (step === 1) {
       setLoading(true);
       setTimeout(() => {
         setProgress(Math.floor(Math.random() * 50) + 1);
@@ -251,7 +251,7 @@ export default function Page() {
       });
     } else if (step === 2) {
       setStep(3);
-    } else if (step === 1) {
+    } else if (step === 3) {
       const storyData = {
         files,
         description,
@@ -303,7 +303,7 @@ export default function Page() {
           </motion.div>
 
           <div className="space-y-6 z-40">
-            {step === 3 && (
+            {step === 1 && (
               <FileUploadComponent
                 previews={previews}
                 handleFileUpload={handleFileUpload}
@@ -323,7 +323,7 @@ export default function Page() {
               </>
             )}
 
-            {step === 1 && (
+            {step === 3 && (
               <StoryLengthSelectionComponent
                 storyLength={storyLength}
                 setStoryLength={setStoryLength}
@@ -337,7 +337,7 @@ export default function Page() {
                 onClick={handleNext}
                 // disabled={loading || (step === 1 && previews.length === 0)}
               >
-                {step === 3 ? "Upload Files" : step === 1 ? "Next" : "Generate"}
+                {step === 1 ? "Upload Files" : step === 3 ? "Next" : "Generate"}
               </Button>
             </div>
           </div>
