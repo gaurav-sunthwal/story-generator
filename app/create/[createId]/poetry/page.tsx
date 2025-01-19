@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { BookOpen, Bookmark, Share2, ArrowLeft, Copy } from 'lucide-react';
+import { BookOpen, Bookmark, Share2, ArrowLeft, Copy, Home } from 'lucide-react';
 import Link from "next/link";
 import { motion, useScroll } from "framer-motion";
 import { ColorModeButton } from "@/components/ui/color-mode";
@@ -109,9 +109,9 @@ export default function Page() {
             <div className="flex items-center">
               <Link href="/dashboard" className="flex items-center">
                 <Button variant="ghost" size="icon" className="mr-2">
-                  <ArrowLeft className="h-5 w-5" />
+                  <Home className="h-5 w-5" />
                 </Button>
-                <span className="text-lg font-medium">School Days</span>
+                {/* <span className="text-lg font-medium">School Days</span> */}
               </Link>
             </div>
             

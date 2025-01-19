@@ -28,7 +28,7 @@ export default function page() {
           </div>
         </div>
       </nav>
-      <Box p={3}>
+      <Box p={1}>
         <HoverEffect items={projects} />
       </Box>
     </div>
