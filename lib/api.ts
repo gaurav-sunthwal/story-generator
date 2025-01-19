@@ -1,13 +1,14 @@
 import axios, {type AxiosInstance} from 'axios';
+import {GeneratedChapter} from "@/lib/shared";
 
 // Axios client configuration with retry logic
 const createAxiosClient = (): AxiosInstance => {
     const client = axios.create({
         timeout: 1000000,
-        proxy:{
+        proxy: {
             port: 8080,
-            host:"localhost",
-            protocol:"http"
+            host: "localhost",
+            protocol: "http"
         }
     });
 
@@ -35,7 +36,7 @@ interface ThemeResponse {
     file: string;
 }
 
-interface Chapter {
+export interface MetaChapter {
     chapter_number: number;
     chapter_title: string;
     content: string;
@@ -43,7 +44,7 @@ interface Chapter {
 
 interface StoryResponse {
     data: {
-        chapters: Chapter[];
+        chapters: MetaChapter[];
         title: string;
     };
 }
@@ -76,7 +77,7 @@ class ThemeAPI {
             `${this.baseUrl}/sketch2story/generateThemes`,
             formData,
             {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: {'Content-Type': 'multipart/form-data'},
             }
         );
         return response.data;
@@ -108,13 +109,13 @@ class StoryAPI {
         themes: string[],
         image_uid: string
     ): Promise<StoryResponse> {
-        const payload = { themes, image_uid };
+        const payload = {themes, image_uid};
 
         const response = await axiosClient.post<StoryResponse>(
             `${this.baseUrl}/sketch2story/generateChapters`,
             payload,
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
             }
         );
         return response.data;
@@ -123,18 +124,28 @@ class StoryAPI {
     async generateStory(
         themes: string[],
         image_uid: string,
-        tone: string,
         chapters_res: StoryResponse["data"],
         size: string,
-        backstory: string
-    ): Promise<StoryResponse> {
-        const payload = { themes, image_uid, tone, chapters_res, size, backstory };
+        backstory: string,
+        user_id: string
+    ): Promise<{
+        data: {
+            cover_art: string;
+            chapters: GeneratedChapter[];
+        };
+    }> {
+        const payload = {themes, image_uid, tone: "", chapters_res, size, backstory, user_id};
 
-        const response = await axiosClient.post<StoryResponse>(
+        const response = await axiosClient.post<{
+            data: {
+                cover_art: string;
+                chapters: GeneratedChapter[];
+            };
+        }>(
             `${this.baseUrl}/sketch2story/generateStory`,
             payload,
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
             }
         );
         return response.data;
@@ -157,7 +168,7 @@ class PoemAPI {
             `${this.baseUrl}/img2poem/generateThemes`,
             formData,
             {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: {'Content-Type': 'multipart/form-data'},
             }
         );
         return response.data;
@@ -168,13 +179,13 @@ class PoemAPI {
         themes: string[],
         settings: string[]
     ): Promise<PoemResponse> {
-        const payload = { image_uid, themes, settings };
+        const payload = {image_uid, themes, settings};
 
         const response = await axiosClient.post<PoemResponse>(
             `${this.baseUrl}/img2poem/generatePoem`,
             payload,
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
             }
         );
         return response.data;
@@ -184,13 +195,13 @@ class PoemAPI {
         image_uid: string,
         themes: string[]
     ): Promise<CaptionResponse> {
-        const payload = { image_uid, themes };
+        const payload = {image_uid, themes};
 
         const response = await axiosClient.post<CaptionResponse>(
             `${this.baseUrl}/cc/generateCaptions`,
             payload,
             {
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
             }
         );
         return response.data;
@@ -198,4 +209,4 @@ class PoemAPI {
 }
 
 // Export classes
-export { ThemeAPI, StoryAPI, PoemAPI };
+export {ThemeAPI, StoryAPI, PoemAPI};
