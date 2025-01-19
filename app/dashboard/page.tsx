@@ -1,12 +1,7 @@
 "use client";
 import React from "react";
 import Header from "../AppComponents/Header";
-import {
-  PlusCircle,
-  Activity,
-  Zap,
-  BookOpen,
-} from "lucide-react";
+import { PlusCircle, Activity, Zap, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
@@ -18,27 +13,24 @@ import Link from "next/link";
 const cardData = [
   {
     name: "Image to Story",
-    icon: "🖼️",
+    icon: "✍️",
     description: "Transform your images into engaging stories.",
     url: "create/ImgtoStory",
     count: 54,
-    trend: "+12% from last week",
   },
   {
     name: "Image to Poetry",
-    icon: "🎧ྀི",
+    icon: "🖋️",
     description: "Create stunning poetry from your images.",
     url: "create/ImgtoPoetry",
     count: 32,
-    trend: "+8% from last week",
   },
   {
-    name: "Image to Motivational Quote",
-    icon: "💬",
-    description: "Generate inspiring quotes from images.",
-    url: "create/ImgtoMotivation",
+    name: "Image to Caption",
+    icon: "📚📖",
+    description: "Generate Caption from images.",
+    url: "create/ImgtoCaption",
     count: 28,
-    trend: "+15% from last week",
   },
 ];
 
@@ -77,14 +69,15 @@ export default function Page() {
               Welcome back, {user?.firstName}
             </h1>
             <p className="text-muted-foreground mt-1">
-              {`   Here's what's happening with your projects`}
+              {`   Ready to bring your next idea to life?`}
             </p>
           </div>
-
-          <Button className="gap-2">
-            <PlusCircle className="h-4 w-4" />
-            New Creation
-          </Button>
+          <Link href={"/create"}>
+            <Button className="gap-2">
+              <PlusCircle className="h-4 w-4" />
+              New Creation
+            </Button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -105,9 +98,6 @@ export default function Page() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{feature.count}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {feature.trend}
-                    </p>
                   </CardContent>
                 </Card>
               </Link>
@@ -121,14 +111,6 @@ export default function Page() {
               <Activity className="h-4 w-4" />
               Recent Activity
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="gap-2">
-              <Zap className="h-4 w-4" />
-              Analytics
-            </TabsTrigger>
-            <TabsTrigger value="library" className="gap-2">
-              <BookOpen className="h-4 w-4" />
-              Content Library
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="activity">
@@ -139,21 +121,7 @@ export default function Page() {
               <CardContent>
                 <div className="space-y-8">
                   {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center">
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {activity.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {activity.type} • {activity.date}
-                        </p>
-                      </div>
-                      <div className="ml-auto font-medium">
-                        {activity.status === "completed" && (
-                          <span className="text-green-500">✓ Complete</span>
-                        )}
-                      </div>
-                    </div>
+                    <></>
                   ))}
                 </div>
               </CardContent>

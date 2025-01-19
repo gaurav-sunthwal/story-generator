@@ -103,7 +103,7 @@ export default function StoryViewer() {
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Link href="/">
+                <Link href="/dashboard">
                   <Button variant="ghost" size="icon">
                     <Home className="h-5 w-5" />
                   </Button>
@@ -148,9 +148,7 @@ export default function StoryViewer() {
                 <span className="text-sm font-medium">
                   Chapter {selectedChapter + 1}
                 </span>
-                <Button variant="ghost" size="icon">
-                  <Bookmark className="h-5 w-5" />
-                </Button>
+                
               </div>
             </div>
           </div>

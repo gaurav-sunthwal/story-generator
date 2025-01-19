@@ -6,6 +6,8 @@ import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-w
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { Button } from "@/components/ui/button";
+import { VStack } from "@chakra-ui/react";
 
 export default function CreateStory() {
   const cardData = [
@@ -94,6 +96,12 @@ export default function CreateStory() {
               </motion.div>
             ))}
           </div>
+
+          <VStack>
+            <Link href={"/dashboard"}>
+            <Button>Dashboard</Button>
+            </Link>
+          </VStack>
         </div>
       </BackgroundBeamsWithCollision>
     </div>
