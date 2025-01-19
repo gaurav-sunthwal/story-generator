@@ -174,12 +174,12 @@ class PoemAPI {
         return response.data;
     }
 
-    async generateSettings(file_id: string, themes: string[]): Promise<{
+    async generateSettings(image_uid: string, themes: string[]): Promise<{
         data: {
             settings: string[];
         };
     }> {
-        const payload = {file_id, themes};
+        const payload = {image_uid, themes};
 
         const response = await axiosClient.post<{
             data: {
@@ -198,9 +198,10 @@ class PoemAPI {
     async generatePoem(
         image_uid: string,
         themes: string[],
-        settings: string[]
+        settings: string[],
+        user_id: string
     ): Promise<PoemResponse> {
-        const payload = {image_uid, themes, settings};
+        const payload = {image_uid, themes, settings, user_id};
 
         const response = await axiosClient.post<PoemResponse>(
             `${this.baseUrl}/img2poem/generatePoem`,

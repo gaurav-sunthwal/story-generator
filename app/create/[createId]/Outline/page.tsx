@@ -65,7 +65,7 @@ export default function OutlinePage() {
             },
             miscStore.size,
             miscStore.backstory,
-            user.user?.primaryEmailAddressId ?? ""
+            user.user?.primaryEmailAddress?.emailAddress ?? ""
         ).then((response) => {
             console.log(response);
             setIsGenerating(false);
