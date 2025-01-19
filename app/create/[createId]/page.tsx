@@ -11,9 +11,9 @@ import {cn} from "@/lib/utils";
 import {motion} from "framer-motion";
 import {FileUpload} from "@/components/ui/file-upload";
 import {useRouter, useParams} from "next/navigation";
-import {PoemAPI, StoryAPI} from "@/lib/api";
+import {CaptionAPI, PoemAPI, StoryAPI} from "@/lib/api";
 import {
-    useChaptersStore, useGeneratedPoemStore,
+    useChaptersStore, useGeneratedCaptionStore, useGeneratedPoemStore,
     useImageStore,
     useMiscConfigStore,
     useThemesStore,
@@ -243,6 +243,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({loading, progress}) =>
     );
 const StoryGenerator = new StoryAPI(process.env.NEXT_PUBLIC_BACKEND_URL!);
 const PoemGenerator = new PoemAPI(process.env.NEXT_PUBLIC_BACKEND_URL!);
+const CaptionGenerator = new CaptionAPI(process.env.NEXT_PUBLIC_BACKEND_URL!);
 
 export default function Page() {
     const [files, setFiles] = useState<File[]>([]);
@@ -264,6 +265,7 @@ export default function Page() {
     const themeStore = useThemesStore();
     const miscStore = useMiscConfigStore();
     const poemStore = useGeneratedPoemStore();
+    const captionStore = useGeneratedCaptionStore();
     const params = useParams();
     const user = useUser()
 
@@ -325,11 +327,28 @@ export default function Page() {
                         setStep(2);
                     }, 500);
                 });
+            } else {
+                CaptionGenerator.generateThemes(files[0]).then((response) => {
+                    console.log("Themes", response);
+                    imageStore.setImageId(response.uid);
+                    themeStore.setThemes(response.themes.themes);
+                    setTheme(
+                        response.themes.themes.map((theme: string) => ({
+                            id: theme,
+                            color: generateRandomColor(),
+                        }))
+                    );
+                    setProgress(100);
+                    setTimeout(() => {
+                        setLoading(false);
+                        setStep(2);
+                    }, 500);
+                })
             }
         } else if (step === 2) {
-            if(params.createId === "ImgtoStory"){
-            setStep(3);
-            } else if(params.createId === "ImgtoPoetry"){
+            if (params.createId === "ImgtoStory") {
+                setStep(3);
+            } else if (params.createId === "ImgtoPoetry") {
 
                 setLoading(true);
                 PoemGenerator.generatePoem(
@@ -343,7 +362,17 @@ export default function Page() {
                     router.push(`/create/${params.createId}/poetry`);
                 });
             } else {
-                alert("Caption generation is not implemented yet")
+                setLoading(true);
+                CaptionGenerator.generateCaptions(
+                    imageStore.imageId,
+                    selectedMood ?? []
+                ).then((response) => {
+                        console.log("Captions", response);
+                        captionStore.setCaptions(response.data.captions);
+
+                        router.push(`/create/${params.createId}/motivation`);
+                    }
+                )
             }
 
 
@@ -456,7 +485,8 @@ export default function Page() {
                                     setColor={setColor}
                                 />
                                 {params.createId === "ImgtoPoetry" && generatedSettings.length ? (
-                                    <SettingsSelection moods={generatedSettings} selectedMood={setting} setSelectedMood={setSetting!} setColor={setColor}/>
+                                    <SettingsSelection moods={generatedSettings} selectedMood={setting}
+                                                       setSelectedMood={setSetting!} setColor={setColor}/>
                                 ) : (
                                     ""
                                 )}
@@ -474,14 +504,14 @@ export default function Page() {
 
                         <div className="mt-6 flex justify-center">
                             {step === 2 && params.createId === "ImgtoPoetry" && !generatedSettings.length ? (
-                                <Button onClick={() =>{
+                                <Button onClick={() => {
                                     setLoading(true);
                                     console.log(imageStore.imageId, selectedMood);
                                     PoemGenerator.generateSettings(
                                         imageStore.imageId,
                                         selectedMood ?? []
                                     ).then((response) => {
-                                       console.log("Settings", response);
+                                        console.log("Settings", response);
                                         setGeneratedSettings(response.data.settings.map((theme: string) => ({
                                             id: theme,
                                             color: generateRandomColor(),
@@ -491,7 +521,7 @@ export default function Page() {
                                     });
 
                                 }}
-                                disabled={loading}
+                                        disabled={loading}
                                 >
                                     Generate Settings
                                 </Button>

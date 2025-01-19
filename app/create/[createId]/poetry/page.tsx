@@ -75,7 +75,7 @@ export default function Page() {
   const handleShare = async () => {
     try {
       await navigator.share({
-        title: 'School Days Poetry',
+        title: 'Poetry',
         text: poetry,
         url: window.location.href,
       });
@@ -111,7 +111,7 @@ export default function Page() {
                 <Button variant="ghost" size="icon" className="mr-2">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <span className="text-lg font-medium">School Days</span>
+                <span className="text-lg font-medium">Poetry</span>
               </Link>
             </div>
             

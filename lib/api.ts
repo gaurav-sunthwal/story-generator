@@ -213,6 +213,39 @@ class PoemAPI {
         return response.data;
     }
 
+}
+
+class CaptionAPI {
+    private readonly baseUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
+
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+    }
+
+    async generateThemes(file: File): Promise<{
+       themes:{
+           themes: string[];
+       }
+        uid: string;
+    }> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await axiosClient.post<{
+            themes:{
+                themes: string[];
+            }
+            uid: string;
+        }>(
+            `${this.baseUrl}/cc/generateThemes`,
+            formData,
+            {
+                headers: {'Content-Type': 'multipart/form-data'},
+            }
+        );
+        return response.data
+    }
+
     async generateCaptions(
         image_uid: string,
         themes: string[]
@@ -230,5 +263,17 @@ class PoemAPI {
     }
 }
 
+class StoredAPI {
+    private readonly baseUrl: string = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
+
+    constructor(baseUrl: string) {
+        this.baseUrl = baseUrl;
+    }
+
+    async getAllSaved(user_id: string) {
+        return await axiosClient.get(`${this.baseUrl}/getAll/${user_id}`);
+    }
+}
+
 // Export classes
-export {ThemeAPI, StoryAPI, PoemAPI};
+export {ThemeAPI, StoryAPI, PoemAPI, CaptionAPI, StoredAPI};

@@ -11,10 +11,7 @@ export const HoverEffect = ({
   items,
   className,
 }: {
-  items: {
-    title: string;
-    link: string;
-  }[];
+  items: string[]
   className?: string;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -27,9 +24,8 @@ export const HoverEffect = ({
       )}
     >
       {items.map((item, idx) => (
-        <Link
-          href={item.link}
-          key={item.link}
+        <div
+          key={item}
           className="relative group block h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
@@ -52,10 +48,10 @@ export const HoverEffect = ({
             )}
           </AnimatePresence>
           <Card>
-            <CardTitle className="min-h-[200px]">{item.title}</CardTitle>
+            <CardTitle className="min-h-[200px]">{item}</CardTitle>
             <CardFooter item={item} />
           </Card>
-        </Link>
+        </div>
       ))}
     </div>
   );
@@ -101,26 +97,9 @@ const CardTitle = ({
   );
 };
 
-const CardDescription = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <p
-      className={cn(
-        "mt-2 text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200",
-        className
-      )}
-    >
-      {children}
-    </p>
-  );
-};
 
-const CardFooter = ({ item }: { item: { title: string; link: string } }) => {
+
+const CardFooter = ({ item }: { item: string }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = (text: string) => {
@@ -133,13 +112,13 @@ const CardFooter = ({ item }: { item: { title: string; link: string } }) => {
     if (navigator.share) {
       navigator
         .share({
-          title: item.title,
-          url: item.link,
+          title: item,
+          url: item,
         })
         .then(() => console.log("Shared successfully!"))
         .catch((error) => console.log("Error sharing: " + error));
     } else {
-      copyToClipboard(item.link);
+      copyToClipboard(item);
     }
   };
 
@@ -150,7 +129,7 @@ const CardFooter = ({ item }: { item: { title: string; link: string } }) => {
         size="sm"
         onClick={(e) => {
           e.preventDefault();
-          copyToClipboard(item.title);
+          copyToClipboard(item);
         }}
         className="text-xs"
       >
