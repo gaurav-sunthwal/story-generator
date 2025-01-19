@@ -16,12 +16,11 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-<<<<<<< HEAD
+
 import { ColorModeButton } from "@/components/ui/color-mode";
-=======
+
 import {useGeneratedStoryStore} from "@/lib/shared";
 
->>>>>>> d5afc277d04179946ee502b16c4d3b8c44f635ef
 
 
 export default function StoryViewer() {
