@@ -301,7 +301,7 @@ export default function Page() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl font-extrabold">Generate</h1>
+            <h1 className="text-4xl font-extrabold">Generate {params.createId === "ImgtoStory" ?   "Story" : params.createId === "ImgtoPoetry" ?  "Poetry" : "Caption"}</h1>
             <p className="text-gray-400">
               What would you like to create today?
             </p>
@@ -318,7 +318,12 @@ export default function Page() {
 
             {step === 2 && (
               <>
-                <BackstoryInput setValue={setDescription} />
+                {params.createId === "ImgtoStory" ? (
+                  <BackstoryInput setValue={setDescription} />
+                ) : (
+                  ""
+                )}
+
                 <MoodSelectionComponent
                   moods={theme}
                   selectedMood={selectedMood}
