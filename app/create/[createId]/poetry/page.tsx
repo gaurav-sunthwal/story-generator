@@ -116,7 +116,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center">
+              <Link href="/dashboard" className="flex items-center">
                 <Button variant="ghost" size="icon" className="mr-2">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
@@ -146,14 +146,7 @@ export default function Page() {
               <div className="flex items-center gap-2">
                 <ColorModeButton />
                 
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsBookmarked(!isBookmarked)}
-                  className={isBookmarked ? "text-yellow-500" : "text-zinc-700 dark:text-zinc-300"}
-                >
-                  <Bookmark className="h-5 w-5" />
-                </Button>
+              
                 
                 <Button
                   variant="ghost"

@@ -1,24 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import {
-  Menu,
-  BookOpen,
-  ChevronRight,
-  Home,
-  ArrowLeft,
-  ArrowRight,
-  Bookmark,
-} from "lucide-react";
+import { BookOpen, Home } from "lucide-react";
 import Link from "next/link";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import React from "react";
+import { ColorModeButton } from "@/components/ui/color-mode";
+import { Box } from "@chakra-ui/react";
 
 export default function page() {
   return (
@@ -27,33 +15,22 @@ export default function page() {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link href="/">
+              <Link href="/dashboard">
                 <Button variant="ghost" size="icon">
                   <Home className="h-5 w-5" />
                 </Button>
               </Link>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-               
-              </Sheet>
             </div>
             <div className="flex items-center space-x-4">
               <BookOpen className="h-5 w-5" />
-              <span className="text-sm font-medium">
-               
-              </span>
-              <Button variant="ghost" size="icon">
-                <Bookmark className="h-5 w-5" />
-              </Button>
+              <ColorModeButton />
             </div>
           </div>
         </div>
       </nav>
-      <HoverEffect items={projects} />
+      <Box p={3}>
+        <HoverEffect items={projects} />
+      </Box>
     </div>
   );
 }
