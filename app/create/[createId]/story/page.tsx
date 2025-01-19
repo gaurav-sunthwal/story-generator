@@ -17,6 +17,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import Link from "next/link";
+import { ColorModeButton } from "@/components/ui/color-mode";
 
 const data = {
   chapters: [
@@ -148,7 +149,7 @@ export default function StoryViewer() {
                 <span className="text-sm font-medium">
                   Chapter {selectedChapter + 1}
                 </span>
-                
+                <ColorModeButton/>
               </div>
             </div>
           </div>
