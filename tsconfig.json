@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/create/[createId]/story/page.jsx"
-  ],
+, "components/ui/wavy-background.jsx"  ],
   "exclude": ["node_modules"]
 }

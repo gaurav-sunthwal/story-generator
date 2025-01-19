@@ -146,7 +146,7 @@ export default function Page() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <div className="container max-w-4xl mx-auto px-4 py-8">
+      <div className="container max-w-4xl mx-auto px-4 py-8 z-100">
         <div className="mb-8">
           <Link href="/create">
             <Button variant="ghost" className="gap-2">
@@ -156,7 +156,7 @@ export default function Page() {
           </Link>
         </div>
 
-        <Card className="p-8 shadow-lg rounded-lg">
+        <Card className="p-8 shadow-lg rounded-lg z-20">
           <motion.div
             className="text-center mb-8"
             initial={{ opacity: 0, y: -20 }}
@@ -170,9 +170,9 @@ export default function Page() {
           </motion.div>
 
           <div className="space-y-6">
-            {step === 1 && previews.length === 0 ? (
+            {step === 2 && previews.length === 0 ? (
               <FileUpload onChange={handleFileUpload} />
-            ) : step === 1 && previews.length > 0 ? (
+            ) : step === 2 && previews.length > 0 ? (
               <motion.div
                 className="w-full h-full flex justify-center items-center"
                 initial="hidden"
@@ -208,7 +208,7 @@ export default function Page() {
                   </motion.div>
                 ))}
               </motion.div>
-            ) : step === 2 ? (
+            ) : step === 1 ? (
               <>
                 <motion.div
                   key="options"

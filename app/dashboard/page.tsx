@@ -2,77 +2,191 @@
 import React from "react";
 import Header from "../AppComponents/Header";
 import {
-  Box,
-  Container,
-  Heading,
-  HStack,
-} from "@chakra-ui/react";
+  PlusCircle,
+  Activity,
+  Zap,
+  BookOpen,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useUser } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 const cardData = [
   {
     name: "Image to Story",
     icon: "🖼️",
     description: "Transform your images into engaging stories.",
-    url: "/ImgtoStory",
+    url: "create/ImgtoStory",
+    count: 54,
+    trend: "+12% from last week",
   },
   {
-    name: "Image to poetry",
+    name: "Image to Poetry",
     icon: "🎧ྀི",
     description: "Create stunning poetry from your images.",
-    url: "/ImgtoPoetry",
+    url: "create/ImgtoPoetry",
+    count: 32,
+    trend: "+8% from last week",
   },
   {
     name: "Image to Motivational Quote",
     icon: "💬",
     description: "Generate inspiring quotes from images.",
-    url: "/ImgtoMotivation",
+    url: "create/ImgtoMotivation",
+    count: 28,
+    trend: "+15% from last week",
   },
 ];
 
+const recentActivity = [
+  {
+    type: "Story",
+    title: "Sunset at the Beach",
+    date: "2 hours ago",
+    status: "completed",
+  },
+  {
+    type: "Poetry",
+    title: "Mountain Landscape",
+    date: "5 hours ago",
+    status: "completed",
+  },
+  {
+    type: "Quote",
+    title: "City Lights",
+    date: "1 day ago",
+    status: "completed",
+  },
+];
 
 export default function Page() {
   const { user } = useUser();
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Header />
 
-      <Container maxW={"6xl"} py={5}>
-        <Box mb={6} textAlign="center">
-          <Heading fontSize={"3xl"} fontWeight={"700"}>
-            Welcome, {user?.firstName}
-          </Heading>
-        </Box>
-
-        <section className="mt-14 px-4 mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {cardData.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1 + index * 0.2 }}
-                className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg"
-              >
-                <HStack justifyContent={"space-between"}>
-                  <h4 className="text-xl font-semibold text-indigo-600 dark:text-indigo-400 mb-3">
-                    {feature.name}
-                  </h4>
-                  <div className="mb-4 text-4xl">{feature.icon}</div>
-                </HStack>
-                <Heading fontWeight={"700"} fontSize={"3xl"}>
-                  54
-                </Heading>
-              </motion.div>
-            ))}
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">
+              Welcome back, {user?.firstName}
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              {`   Here's what's happening with your projects`}
+            </p>
           </div>
-        </section>
 
-        {/* Section for Previously Created Cards */}
-       
-      </Container>
+          <Button className="gap-2">
+            <PlusCircle className="h-4 w-4" />
+            New Creation
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {cardData.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 * index }}
+            >
+              <Link href={feature.url}>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">
+                      {feature.name}
+                    </CardTitle>
+                    <span className="text-2xl">{feature.icon}</span>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{feature.count}</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {feature.trend}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+
+        <Tabs defaultValue="activity" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="activity" className="gap-2">
+              <Activity className="h-4 w-4" />
+              Recent Activity
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-2">
+              <Zap className="h-4 w-4" />
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger value="library" className="gap-2">
+              <BookOpen className="h-4 w-4" />
+              Content Library
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="activity">
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-8">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {activity.title}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {activity.type} • {activity.date}
+                        </p>
+                      </div>
+                      <div className="ml-auto font-medium">
+                        {activity.status === "completed" && (
+                          <span className="text-green-500">✓ Complete</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <Card>
+              <CardHeader>
+                <CardTitle>Analytics Overview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Your content creation analytics and trends will appear here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="library">
+            <Card>
+              <CardHeader>
+                <CardTitle>Content Library</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Your saved and generated content will be displayed here.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   );
 }
